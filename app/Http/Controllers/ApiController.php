@@ -6,6 +6,7 @@ use App\Models\Cat_Details;
 use App\Models\Cats;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -23,8 +24,8 @@ class ApiController extends Controller
         // $data = curl_exec($ch);
         // curl_close($ch);
         
-        foreach ($response_data as $key) {
-            if ($response_data[$key]->dog_friendly > 4 && $response_data[$key]->intelligence > 4 && $response_data[$key]->child_friendly > 4) {
+        foreach ($response_data as $key => $value) {
+            if ($response_data[$key]->dog_friendly >= 4 && $response_data[$key]->intelligence >= 4 && $response_data[$key]->child_friendly >= 4) {
                 array_push($ret, $response_data[$key]);
             }
         }
@@ -80,5 +81,18 @@ class ApiController extends Controller
                 'success' => false
             ], 400);
         }
+    }
+
+    public function get(){
+        $res = DB::table('cats')
+            ->select('cats.id', 'cat_details.*')
+            ->leftJoin('cat_details', 'cats.id', '=', 'cat_details.cat_id')
+            ->orderBy('cats.id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $res
+        ]);
     }
 }

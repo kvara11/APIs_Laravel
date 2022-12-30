@@ -11,4 +11,5 @@ class Cats extends Model
 
     protected $table = 'cats';
     protected $fillable = [ 'name', 'city', 'color' ];
+        
 }
