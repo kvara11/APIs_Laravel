@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/v1')->group(function () {
-    Route::get('/cats', [ApiController::class, 'index']);
+    Route::get('/cats', [ApiController::class, 'catsAPI']);
     Route::get('/cats/{id}', [ApiController::class, 'show']);
+    Route::post('/cats/store', [ApiController::class, 'store']);
 });
