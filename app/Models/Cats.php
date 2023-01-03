@@ -11,5 +11,8 @@ class Cats extends Model
 
     protected $table = 'cats';
     protected $fillable = [ 'name', 'city', 'color' ];
-        
+    
+    public function cat_details(){
+        return $this->hasOne(Cat_details::class, 'cat_id', 'id');
+    }
 }

@@ -84,15 +84,20 @@ class ApiController extends Controller
     }
 
     public function get(){
-        $res = DB::table('cats')
-            ->select('cats.id', 'cat_details.*')
-            ->leftJoin('cat_details', 'cats.id', '=', 'cat_details.cat_id')
-            ->orderBy('cats.id', 'desc')
-            ->get();
+
+        //with table joins
+        // $res = DB::table('cats')
+        //     ->select('cats.*', 'cat_details.cat_id', 'cat_details.height', 'cat_details.weight')
+        //     ->leftJoin('cat_details', 'cats.id', '=', 'cat_details.cat_id')
+        //     ->orderBy('cats.id', 'desc')
+        //     ->get();
+
+        //with model elequant - belongsTo
+        $res = Cats::with('cat_details')->orderByDesc('id')->get();
 
         return response()->json([
             'success' => true,
             'data' => $res
-        ]);
+        ], 200);
     }
 }

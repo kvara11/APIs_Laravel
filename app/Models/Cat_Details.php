@@ -11,4 +11,7 @@ class Cat_Details extends Model
     protected $table = 'cat_details';
     protected $fillable = [ 'cat_id', 'height', 'weight' ];
 
+    public function cat(){
+        return $this->belongsTo(Cat::class, 'cat_id', 'id', );
+    }
 }
