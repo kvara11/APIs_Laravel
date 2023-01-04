@@ -79,7 +79,8 @@ class ApiController extends Controller
         ], 200);
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $res = Cats::with('cat_details')->find($id);
 
         if ($res) {
@@ -130,7 +131,7 @@ class ApiController extends Controller
         $detail->height = $request->get('height');
         $detail->weight = $request->get('weight');
         $cat->cat_details()->save($detail);
-    
+
 
         if ($cat && $detail) {
             return response()->json([
@@ -196,7 +197,6 @@ class ApiController extends Controller
         $cat->color = $request->get('color');
 
         if ($cat->update()) {
-
             $details = array();
             //check if request contains inputs
             $request->has('height') ? $details['height'] = $request->get('height') : null;
@@ -216,7 +216,6 @@ class ApiController extends Controller
                 'message' => 'Update Failed',
             ], 400);
         }
-
     }
 
     public function destroy($id)
@@ -229,8 +228,8 @@ class ApiController extends Controller
                 'success' => true,
                 'message' => 'Deleted Successfully, ID:' . $id
             ], 200);
-            //204 - status, without message response
-        }else{
+        //204 - status, without message response
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Not Found'
