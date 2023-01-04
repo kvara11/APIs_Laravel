@@ -21,10 +21,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/v1')->group(function () {
-
     Route::get('/cats', [ApiController::class, 'catsAPI']);             //from api endpoint
     Route::get('/cats/{id}', [ApiController::class, 'show']);
 
     Route::get('/getCat', [ApiController::class, 'get']);              //from DB
     Route::post('/cats/store', [ApiController::class, 'store']);
+
+    Route::get('/cats/{id}/edit', [ApiController::class, 'edit']);
+    Route::put('/cats/{id}/update', [ApiController::class, 'update']);
 });
+
+// Route::post('/test', [ApiController::class, 'sst']);
