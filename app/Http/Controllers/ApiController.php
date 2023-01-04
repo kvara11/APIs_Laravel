@@ -97,15 +97,15 @@ class ApiController extends Controller
 
     public function store(Request $request)
     {
-        $rule = array(
-            'name' => 'required|string|max:20',
-            'city' => 'required|string|max:25',
+        $rules = array(
+            'name' => 'required|string|alpha|max:20',
+            'city' => 'required|string|alpha|max:25',
             'color' => 'required|string|max:25',
-            'height' => 'nullable|string|max:5',
-            'weight' => 'nullable|string|max:5',
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
         );
 
-        $validator = Validator::make($request->all(), $rule);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
