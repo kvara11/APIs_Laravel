@@ -12,7 +12,7 @@ use Validator;
 
 class ApiController extends Controller
 {
-    public function catsAPI()
+    public function api_index()
     {
         //with Get_Content
         $api_url = 'https://api.thecatapi.com/v1/breeds';
@@ -40,7 +40,7 @@ class ApiController extends Controller
     }
 
 
-    public function show($id)
+    public function api_show($id)
     {
         $api_url = 'https://api.thecatapi.com/v1/breeds';
         $json_data = file_get_contents($api_url);
@@ -61,7 +61,7 @@ class ApiController extends Controller
     }
 
 
-    public function get()
+    public function index()
     {
         //with table joins
         // $res = DB::table('cats')
@@ -77,6 +77,22 @@ class ApiController extends Controller
             'success' => true,
             'data' => $res
         ], 200);
+    }
+
+    public function show($id){
+        $res = Cats::with('cat_details')->find($id);
+
+        if ($res) {
+            return response()->json([
+                'success' => true,
+                'data' => $res
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => 'No data found'
+            ], 404);
+        }
     }
 
     public function store(Request $request)
@@ -103,19 +119,18 @@ class ApiController extends Controller
             'color' => $request->get('color')
         );
 
-        if ($catForm) {
-            $cat = Cats::create($catForm);
+        $cat = Cats::create($catForm);
 
-            //method 1
-            // $detail = Cat_Details::create(['cat_id' => $cat->id, 'height' => $request->get('height'), 'weight' => $request->get('weight')]);
+        //method 1
+        // $detail = Cat_Details::create(['cat_id' => $cat->id, 'height' => $request->get('height'), 'weight' => $request->get('weight')]);
 
-            //method 2
-            $detail = new Cat_Details();
-            $detail->cat_id = $cat->id;
-            $detail->height = $request->get('height');
-            $detail->weight = $request->get('weight');
-            $cat->cat_details()->save($detail);
-        }
+        //method 2
+        $detail = new Cat_Details();
+        $detail->cat_id = $cat->id;
+        $detail->height = $request->get('height');
+        $detail->weight = $request->get('weight');
+        $cat->cat_details()->save($detail);
+    
 
         if ($cat && $detail) {
             return response()->json([
@@ -193,14 +208,33 @@ class ApiController extends Controller
                     'message' => 'Updated Successfully',
                     'data' => $cat,
                     'details' => $details
-                ], 201);
+                ], 200);
             }
         } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Update Failed',
-            ]);
+            ], 400);
         }
 
+    }
+
+    public function destroy($id)
+    {
+        $cat = Cats::find($id);
+
+        if ($cat) {
+            $cat->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Deleted Successfully, ID:' . $id
+            ], 200);
+            //204 - status, without message response
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Not Found'
+            ], 404);
+        }
     }
 }
