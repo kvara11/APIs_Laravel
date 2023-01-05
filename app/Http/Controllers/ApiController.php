@@ -8,6 +8,9 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+use Psy\Util\Json;
 use Validator;
 
 class ApiController extends Controller
@@ -172,7 +175,7 @@ class ApiController extends Controller
         if (!isset($cat)) {
             return response()->json([
                 'success' => false,
-                'data' => 'no data found'
+                'data' => 'No data found'
             ], 404);
         }
 
@@ -232,8 +235,22 @@ class ApiController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Not Found'
+                'message' => 'No data found'
             ], 404);
         }
+    }
+
+    public function astro()
+    {
+        // $data = json_decode(file_get_contents('https://go-apod.herokuapp.com/apod'));
+
+        //with guzzle
+        $client = new Client();
+        $req = $client->get('https://go-apod.herokuapp.com/apod', 
+                        ['verify' => false,
+                        'headers' => ['Content-Type' => "application/json"]]);
+        $res = $req->getBody();
+        
+        return json_decode($res);
     }
 }

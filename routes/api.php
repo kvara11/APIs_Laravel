@@ -33,3 +33,7 @@ Route::prefix('/v1')->group(function () {
 
     Route::delete('/cats/{id}/delete', [ApiController::class, 'destroy']);
 });
+
+Route::prefix('/pub')->group(function () {
+    Route::get('/astro', [ApiController::class, 'astro']);
+});
